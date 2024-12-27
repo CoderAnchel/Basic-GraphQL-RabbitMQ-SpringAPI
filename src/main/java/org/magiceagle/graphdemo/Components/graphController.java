@@ -1,6 +1,8 @@
 package org.magiceagle.graphdemo.Components;
 
+import org.magiceagle.graphdemo.Entities.Post;
 import org.magiceagle.graphdemo.Entities.User;
+import org.magiceagle.graphdemo.Repos.PostRepo;
 import org.magiceagle.graphdemo.Repos.usersRepo;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -13,9 +15,11 @@ import java.util.List;
 public class graphController {
 
     private final usersRepo userRepo;
+    private final PostRepo postRepo;
 
-    public graphController(usersRepo userRepo) {
+    public graphController(usersRepo userRepo, PostRepo postRepo) {
         this.userRepo = userRepo;
+        this.postRepo = postRepo;
     }
 
     @QueryMapping
@@ -33,5 +37,23 @@ public class graphController {
         User user = new User();
         user.setName(name);
         return userRepo.save(user);
+    }
+
+    @QueryMapping
+    public List<Post> posts() {
+        return postRepo.findAll();
+    }
+
+    @QueryMapping
+    public Post postById(@Argument  Long id) {
+        return postRepo.findById(id).orElse(null);
+    }
+
+    @MutationMapping
+    public Post createPost(@Argument String title, @Argument String messague) {
+        Post post = new Post();
+        post.setTitle(title);
+        post.setMessague(messague);
+        return postRepo.save(post);
     }
 }

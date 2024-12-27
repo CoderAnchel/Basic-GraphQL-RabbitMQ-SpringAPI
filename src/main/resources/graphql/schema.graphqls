@@ -1,14 +1,23 @@
 type Mutation {
     createUser(name: String!): User
+    createPost(title: String! messague: String!): Post
 }
 
 type Query {
     userById(id: ID): User
+    postById(id: ID): Post
     users: [User]
+    posts: [Post]
 }
 
 
 type User {
     id: ID
     name: String
+}
+
+type Post {
+    id: ID
+    title: String
+    messague: String
 }
